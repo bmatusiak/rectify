@@ -1,13 +1,14 @@
 {
   "name": "@bmatusiak/rectify",
   "version": "1.0.0",
-  "description": "rebuild of c9's architect for es6, no config resolver",
+  "description": "",
   "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-  }
+  "license": "ISC"
 }
