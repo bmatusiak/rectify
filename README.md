@@ -24,7 +24,7 @@ app.start();
 ```
 
 `./plugin_a/plugin.js`
-```
+```js
 export const consumes = ["hello"];
 export const provides = [];
 export function setup( imports, register) {
@@ -35,7 +35,7 @@ export function setup( imports, register) {
 ```
 
 `./plugin_b/plugin.js`
-```
+```js
 export const consumes = [];
 export const provides = ["hello"];
 export function setup(imports, register) {
