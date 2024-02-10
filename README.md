@@ -81,7 +81,7 @@ When all plugins are done, the "ready" event is emitted.  The value is the Recti
 
 ## Rectify hub
 
-Rectify provides a hub plugin, this hub provides hooks into build events, and provides a emitter class for general use across the app
+Rectify provides a hub plugin, this hub provides hooks into build events
 
 ```js
 setup.consumes = ["hub"];
