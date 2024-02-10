@@ -27,7 +27,7 @@ app.start();
 ```js
 export const consumes = ["hello"];
 export const provides = [];
-export function setup( imports, register) {
+export default function setup( imports, register) {
     var { hello } = imports;
     hello.test();
     register();
@@ -38,7 +38,7 @@ export function setup( imports, register) {
 ```js
 export const consumes = [];
 export const provides = ["hello"];
-export function setup(imports, register) {
+export default function setup(imports, register) {
     register(null, {
         hello:{
             test:function(){
@@ -81,7 +81,16 @@ When all plugins are done, the "ready" event is emitted.  The value is the Recti
 
 ## Rectify hub
 
-Rectify provides a hub plugin, this hub provides hooks into build events, and provides a emitter for general use across the app
+Rectify provides a hub plugin, this hub provides hooks into build events, and provides a emitter class for general use across the app
 
-
+```
+export const consumes = ["hub"];
+export default function setup(imports, register) {
+    const { hub } = imports;
+    hub.on("ready", () => { });
+    hub.on("ready", () => { });
+    hub.on("ready", () => { });
+    register(null, {});
+}
+```
 
