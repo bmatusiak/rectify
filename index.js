@@ -42,7 +42,6 @@ function checkCycles(config) {
     });
 
     var resolved = {
-        hub: true,
         app: true
     };
     var changed = true;
@@ -112,20 +111,15 @@ class Rectify extends EventEmitter {
         var app = this;
         app.config = config;
         var services = app.services = {
-            hub: {
+            app: {
                 EventEmitter: EventEmitter,
+                window: window || global,
                 on: function (name, callback) {
                     if (typeof (callback) == "function") callback = callback.bind(app);
                     app.on(name, callback);
                 }
             }
         };
-
-        (function () {
-            services.app = new EventEmitter();
-            services.app.EventEmitter = EventEmitter;
-            services.app.window = window || global;
-        })();
 
         // Check the config
         var sortedPlugins = checkConfig(config);
