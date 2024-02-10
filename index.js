@@ -1,4 +1,5 @@
-import { EventEmitter } from "events";
+import events from "events";
+const EventEmitter = events.EventEmitter;
 
 function objHas(obj, name) { return Object.prototype.hasOwnProperty.call(obj, name); }
 
@@ -11,7 +12,7 @@ function checkConfig(config) {
 
         if (!objHas(plugin, "setup") && typeof plugin == "function")
             plugin.setup = plugin;
-        
+
         if (!objHas(plugin, "setup") && typeof plugin.default == "function")
             plugin.setup = plugin.default;
 
@@ -41,7 +42,8 @@ function checkCycles(config) {
     });
 
     var resolved = {
-        hub: true
+        hub: true,
+        app: true
     };
     var changed = true;
     var sorted = [];
@@ -111,6 +113,7 @@ class Rectify extends EventEmitter {
         app.config = config;
         var services = app.services = {
             hub: {
+                EventEmitter: EventEmitter,
                 on: function (name, callback) {
                     if (typeof (callback) == "function") callback = callback.bind(app);
                     app.on(name, callback);
@@ -118,13 +121,19 @@ class Rectify extends EventEmitter {
             }
         };
 
+        (function () {
+            services.app = new EventEmitter();
+            services.app.EventEmitter = EventEmitter;
+            services.app.window = window || global;
+        })();
+
         // Check the config
         var sortedPlugins = checkConfig(config);
 
         var destructors = [];
 
         app.start = function (callback) {
-            if(callback) app.on("ready", callback);
+            if (callback) app.on("ready", callback);
             var plugin = sortedPlugins.shift();
             if (!plugin)
                 return app.emit("ready", app);

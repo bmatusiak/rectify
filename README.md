@@ -83,13 +83,15 @@ When all plugins are done, the "ready" event is emitted.  The value is the Recti
 
 Rectify provides a hub plugin, this hub provides hooks into build events, and provides a emitter class for general use across the app
 
-```
-export const consumes = ["hub"];
+```js
+setup.consumes = ["hub"];
+setup.provides = [];
 export default function setup(imports, register) {
     const { hub } = imports;
-    hub.on("ready", () => { });
-    hub.on("ready", () => { });
-    hub.on("ready", () => { });
+    hub.on("ready", (app) => { });
+    hub.on("service", (service) => { });
+    hub.on("plugin", (plugin) => { });
+    hub.on("error", (error) => { });
     register(null, {});
 }
 ```

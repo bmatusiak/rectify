@@ -1,11 +1,9 @@
 
-export const consumes = [];
 
-export const provides = ["hello"];
+setup.consumes = [];
+setup.provides = ["hello"];
 
-
-export function setup(imports, register) {
-
+export default function setup(imports, register) {
     register(null, {
         hello:{
             test:function(){
