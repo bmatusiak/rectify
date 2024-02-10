@@ -51,9 +51,7 @@ export function setup(imports, register) {
 
 ## Config Format
 
-Notice that the config is a list of plugin config options.  If the only option in the config is `packagePath`, then a string can be used in place of the object.  If you want to pass other options to the plugin when it's being created, you can put arbitrary properties here.
-
-The `plugin` section in each plugin's package.json is also merged in as a prototype to the main config.  This is where `provides` and `consumes` properties are usually set.
+The `exports` section in each plugin's main.js.  This is where `provides` and `consumes` properties are usually set.
 
 ## Rectify main API
 
@@ -80,4 +78,10 @@ When a plugin registers, this event is emitted.
 ### Event: "ready" (app)
 
 When all plugins are done, the "ready" event is emitted.  The value is the Rectify instance itself.
+
+## Rectify hub
+
+Rectify provides a hub plugin, this hub provides hooks into build events, and provides a emitter for general use across the app
+
+
 
