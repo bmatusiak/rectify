@@ -20,10 +20,16 @@ function checkConfig(config) {
             throw new Error("Plugin is missing the setup function " + JSON.stringify(plugin));
         }
         if (!objHas(plugin, "provides")) {
-            throw new Error("Plugin is missing the provides array " + JSON.stringify(plugin));
+            if (objHas(plugin.setup, "provides")) {
+                plugin.provides = plugin.setup.provides;
+            }else
+                throw new Error("Plugin is missing the provides array " + JSON.stringify(plugin));
         }
         if (!objHas(plugin, "consumes")) {
-            throw new Error("Plugin is missing the consumes array " + JSON.stringify(plugin));
+            if (objHas(plugin.setup, "consumes")) {
+                plugin.consumes = plugin.setup.consumes;
+            }else
+                throw new Error("Plugin is missing the consumes array " + JSON.stringify(plugin));
         }
     });
 
