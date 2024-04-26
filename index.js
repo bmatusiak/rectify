@@ -22,13 +22,13 @@ function checkConfig(config) {
         if (!objHas(plugin, "provides")) {
             if (objHas(plugin.setup, "provides")) {
                 plugin.provides = plugin.setup.provides;
-            }else
+            } else
                 throw new Error("Plugin is missing the provides array " + JSON.stringify(plugin));
         }
         if (!objHas(plugin, "consumes")) {
             if (objHas(plugin.setup, "consumes")) {
                 plugin.consumes = plugin.setup.consumes;
-            }else
+            } else
                 throw new Error("Plugin is missing the consumes array " + JSON.stringify(plugin));
         }
     });
@@ -119,10 +119,13 @@ class Rectify extends EventEmitter {
         var services = app.services = {
             app: {
                 EventEmitter: EventEmitter,
-                window: window || global,
+                window: typeof window == "undefined" ? global : window,
                 on: function (name, callback) {
                     if (typeof (callback) == "function") callback = callback.bind(app);
-                    app.on(name, callback);
+                    app.on.apply(app, [name, callback]);
+                },
+                emit: function () {
+                    app.emit.apply(app, arguments);
                 }
             }
         };
