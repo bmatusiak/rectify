@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "webpack-cli -c webpack.config.js"
+    "install": "webpack-cli -c webpack.config.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,12 +1,12 @@
 {
   "name": "@bmatusiak/rectify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "build.js",
   "directories": {
-    "example": "example"
+    "example": "example",
+    "webpacker": "webpacker"
   },
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,5 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "events": "^3.3.0"
+  },
+  "devDependencies": {
+    "webpacker": "file:webpacker"
   }
 }

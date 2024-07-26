@@ -1,12 +1,12 @@
 var path = require("path");
 module.exports = {
   mode: "development",
-  entry: path.resolve(__dirname, '../index.js'),
+  entry: path.resolve(__dirname, '../index.mjs'),
   output: {
     library: 'rectify',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, '../'),
-    filename: 'browser.js',
+    filename: 'build.js',
   },
   module: {
     rules: [
