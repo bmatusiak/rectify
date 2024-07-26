@@ -7,7 +7,7 @@ module.exports = {
     library: 'rectify',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, './'),
-    filename: 'build.js',
+    filename: 'index.js',
   },
   module: {
     rules: [
