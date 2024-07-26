@@ -3,6 +3,7 @@ module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, './index.mjs'),
   output: {
+    globalObject: `globalThis`,
     library: 'rectify',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, './'),
