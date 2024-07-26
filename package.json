@@ -2,7 +2,7 @@
   "name": "@bmatusiak/rectify",
   "version": "1.0.2",
   "description": "",
-  "main": "build.js",
+  "main": "index.js",
   "directories": {
     "example": "example",
     "webpacker": "webpacker"
