@@ -120,10 +120,10 @@ class Rectify extends EventEmitter {
         var services = app.services = {
             app: {
                 EventEmitter: EventEmitter,
-                isNode: (typeof process != "undefined" && !process.__nwjs ? 1 : 0),
-                isFork: (typeof process != "undefined" && process.send ? 1 : 0),
-                isNWJS: (typeof process != "undefined" && process.__nwjs ? 1 : 0),
-                isWorker: (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0,
+                isNode: Rectify.isNode,
+                isFork: Rectify.isFork,
+                isNWJS: Rectify.isNWJS,
+                isWorker: Rectify.isWorker,
                 window: typeof window == "undefined" ? global : window,
                 on: function (name, callback) {
                     if (typeof (callback) == "function") callback = callback.bind(app);
@@ -197,6 +197,11 @@ class Rectify extends EventEmitter {
         // (typeof process === "object" ? process.nextTick : setTimeout)(app.start);
     }
 }
+
+Rectify.isNode = (typeof process != "undefined" && !process.__nwjs ? 1 : 0);
+Rectify.isFork = (typeof process != "undefined" && process.send ? 1 : 0);
+Rectify.isNWJS = (typeof process != "undefined" && process.__nwjs ? 1 : 0);
+Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0;
 
 Rectify.build = function (config, callback) {
     var app;
