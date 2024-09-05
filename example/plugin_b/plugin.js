@@ -1,9 +1,9 @@
 
 
-setup.consumes = [];
-setup.provides = ["hello"];
+plugin.consumes = [];
+plugin.provides = ["hello"];
 
-export default function setup(imports, register) {
+function plugin(imports, register) {
     register(null, {
         hello:{
             test:function(){
@@ -13,3 +13,5 @@ export default function setup(imports, register) {
     })
 }
 
+
+module.exports = plugin;

@@ -3,8 +3,16 @@ import pluginB from "./plugin_b/plugin.js"
 
 import rectify from "../index.js"
 
-var config = [pluginA,pluginB];
+(async function (){
+        
+    var config = [
+        pluginA,
+        pluginB
+    ];
 
-var app = rectify.build(config)
+    var app = rectify.build(config)
 
-app.start()
+    var main = await app.start();
+
+    //main.app.services
+})();
