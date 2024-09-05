@@ -1,4 +1,5 @@
-import events from "events";
+// import events from "events";
+const events = require("events");
 const EventEmitter = events.EventEmitter;
 
 function objHas(obj, name) { return Object.prototype.hasOwnProperty.call(obj, name); }
@@ -119,6 +120,10 @@ class Rectify extends EventEmitter {
         var services = app.services = {
             app: {
                 EventEmitter: EventEmitter,
+                isNode: (typeof process != "undefined" && !process.__nwjs ? 1 : 0),
+                isFork: (typeof process != "undefined" && process.send ? 1 : 0),
+                isNWJS: (typeof process != "undefined" && process.__nwjs ? 1 : 0),
+                isWorker: (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0,
                 window: typeof window == "undefined" ? global : window,
                 on: function (name, callback) {
                     if (typeof (callback) == "function") callback = callback.bind(app);
@@ -135,7 +140,7 @@ class Rectify extends EventEmitter {
 
         var destructors = [];
 
-        app.start = function (callback) {
+        app.start = async function (callback) {
             if (callback) app.on("ready", callback);
             var plugin = sortedPlugins.shift();
             if (!plugin)
@@ -148,13 +153,25 @@ class Rectify extends EventEmitter {
                 });
             }
 
+            var $config = {};
+            plugin.provides.forEach(function (name) {
+                if (plugin.config && plugin.config[name]) {
+                    $config[name] = plugin.config[name];
+                } else $config[name] = {};
+                var $c = config.config && config.config[name] ? config.config[name] : {};
+                for (var i in $c) {
+                    $config[name][i] = $c[i];
+                }
+            });
+
             try {
-                plugin.setup(imports, register);
+                await plugin.setup(imports, register, $config);
+                return app;
             } catch (e) {
                 return app.emit("error", e);
             }
 
-            function register(err, provided) {
+            async function register(err, provided) {
                 if (err) { return app.emit("error", err); }
                 plugin.provides.forEach(function (name) {
                     if (!objHas(provided, name)) {
@@ -172,7 +189,7 @@ class Rectify extends EventEmitter {
                     destructors.push(provided.onDestroy);
 
                 app.emit("plugin", plugin);
-                app.start();
+                await app.start();
             }
         };
 
@@ -209,4 +226,4 @@ Rectify.build = function (config, callback) {
     }
 };
 
-export default Rectify;
+module.exports = Rectify;
