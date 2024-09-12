@@ -113,7 +113,7 @@ function checkCycles(config) {
 }
 
 class Rectify extends EventEmitter {
-    constructor(config) {
+    constructor(config, appArg) {
         super();//setup emitter
         var app = this;
         app.config = config;
@@ -129,11 +129,21 @@ class Rectify extends EventEmitter {
                     if (typeof (callback) == "function") callback = callback.bind(app);
                     app.on.apply(app, [name, callback]);
                 },
+                once: function (name, callback) {
+                    if (typeof (callback) == "function") callback = callback.bind(app);
+                    app.once.apply(app, [name, callback]);
+                },
                 emit: function () {
                     app.emit.apply(app, arguments);
                 }
             }
         };
+        if (appArg && typeof appArg == "object")
+            for (var i in appArg) {
+                services.app[i] = appArg[i];
+            }
+        else
+            services.app.arg = appArg;
 
         // Check the config
         var sortedPlugins = checkConfig(config);
@@ -206,9 +216,9 @@ Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instan
 Rectify.build = function (config, callback) {
     var app;
     try {
-        app = new Rectify(config);
+        app = new Rectify(config, callback && typeof callback == "object" ? callback : null);
     } catch (err) {
-        if (!callback) throw err;
+        if (!callback || !(typeof callback == "function")) throw err;
         return callback(err, app);
     }
     if (callback) {
@@ -223,11 +233,13 @@ Rectify.build = function (config, callback) {
 
     function done(err) {
         if (err) {
-            app.destroy();
+            console.error(err);
+            app.emit('destroy');
         }
         app.removeListener("error", done);
         app.removeListener("ready", onReady);
-        callback(err, app);
+        if (callback && (typeof callback == "function"))
+            callback(err, app);
     }
 };
 
