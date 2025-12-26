@@ -150,12 +150,21 @@ class Rectify extends EventEmitter {
 
         var destructors = [];
 
-        app.start = async function (callback) {
+        app.start = async function (args, callback) {
+            if (typeof args == "function") {
+                callback = args;
+                args = null;
+            }
+            if (args) app.args = args;
             if (callback) app.on("ready", callback);
             var plugin = sortedPlugins.shift();
-            if (!plugin)
-                return app.emit("ready", app);
-
+            if (!plugin) {
+                app.emit("ready", app);
+                setTimeout(function () {
+                    app.emit("start", app);
+                }, 10);
+                return;
+            }
             var imports = {};
             if (plugin.consumes) {
                 plugin.consumes.forEach(function (name) {
@@ -208,11 +217,22 @@ class Rectify extends EventEmitter {
     }
 }
 
-Rectify.isNode = (typeof process != "undefined" && !process.__nwjs ? 1 : 0);
-Rectify.isFork = (typeof process != "undefined" && process.send ? 1 : 0);
-Rectify.isNWJS = (typeof process != "undefined" && process.__nwjs ? 1 : 0);
-Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0;
-
+if (typeof process !== "undefined") {
+    const browserLike = process.__nwjs || process.versions.electron;
+    Rectify.isBrowser = (typeof window != "undefined" && typeof window.document != "undefined") ? 1 : 0;
+    Rectify.isNode = (typeof process != "undefined" && !browserLike ? 1 : 0);
+    Rectify.isFork = (typeof process != "undefined" && process.send ? 1 : 0);
+    Rectify.isNWJS = (typeof process != "undefined" && process.__nwjs ? 1 : 0);
+    Rectify.isElectron = (typeof process != "undefined" && process.versions.electron ? 1 : 0);
+    Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0;
+} else {
+    Rectify.isBrowser = (typeof window != "undefined" && typeof window.document != "undefined") ? 1 : 0;
+    Rectify.isNode = 0;
+    Rectify.isFork = 0;
+    Rectify.isNWJS = 0;
+    Rectify.isElectron = 0;
+    Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0;
+}
 Rectify.build = function (config, callback) {
     var app;
     try {
