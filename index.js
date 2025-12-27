@@ -135,6 +135,9 @@ class Rectify extends EventEmitter {
                 },
                 emit: function () {
                     app.emit.apply(app, arguments);
+                },
+                get services() {
+                    return app.services;
                 }
             }
         };
@@ -159,7 +162,7 @@ class Rectify extends EventEmitter {
             if (callback) app.on("ready", callback);
             var plugin = sortedPlugins.shift();
             if (!plugin) {
-                app.emit(app.$, app);
+                services.app.emit(app.$, app);
                 return app.emit("ready", app);
             }
             var imports = {};
