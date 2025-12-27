@@ -1,4 +1,5 @@
 // import events from "events";
+const { isBrowser } = require("@bmatusiak/rectify");
 const events = require("events");
 const EventEmitter = events.EventEmitter;
 
@@ -120,6 +121,8 @@ class Rectify extends EventEmitter {
         var services = app.services = {
             app: {
                 EventEmitter: EventEmitter,
+                isBrowser: Rectify.isBrowser,
+                isElectron: Rectify.isElectron,
                 isNode: Rectify.isNode,
                 isFork: Rectify.isFork,
                 isNWJS: Rectify.isNWJS,
