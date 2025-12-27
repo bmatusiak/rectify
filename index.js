@@ -150,20 +150,17 @@ class Rectify extends EventEmitter {
 
         var destructors = [];
 
-        app.start = async function (args, callback) {
-            if (typeof args == "function") {
-                callback = args;
-                args = null;
+        app.start = async function (event, callback) {
+            if (typeof event == "function") {
+                callback = event;
+                event = null;
             }
-            if (args) app.args = args;
+            if (event) app.$ = event;
             if (callback) app.on("ready", callback);
             var plugin = sortedPlugins.shift();
             if (!plugin) {
-                app.emit("ready", app);
-                setTimeout(function () {
-                    app.emit("start", app);
-                }, 10);
-                return;
+                app.emit(app.$, app);
+                return app.emit("ready", app);
             }
             var imports = {};
             if (plugin.consumes) {
