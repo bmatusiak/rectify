@@ -221,12 +221,12 @@ class Rectify extends EventEmitter {
 }
 
 if (typeof process !== "undefined") {
-    const browserLike = process.__nwjs || process.versions.electron;
+    const browserLike = (process && process.__nwjs) || (process && process.versions && process.versions.electron);
     Rectify.isBrowser = (typeof window != "undefined" && typeof window.document != "undefined") ? 1 : 0;
     Rectify.isNode = (typeof process != "undefined" && !browserLike ? 1 : 0);
     Rectify.isFork = (typeof process != "undefined" && process.send ? 1 : 0);
     Rectify.isNWJS = (typeof process != "undefined" && process.__nwjs ? 1 : 0);
-    Rectify.isElectron = (typeof process != "undefined" && process.versions.electron ? 1 : 0);
+    Rectify.isElectron = (typeof process != "undefined" && process.versions && process.versions.electron ? 1 : 0);
     Rectify.isWorker = (typeof WorkerGlobalScope != "undefined" && globalThis instanceof WorkerGlobalScope) ? 1 : 0;
 } else {
     Rectify.isBrowser = (typeof window != "undefined" && typeof window.document != "undefined") ? 1 : 0;
